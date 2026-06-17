@@ -15,9 +15,13 @@ class Config:
     # Check if a custom database URL is provided (e.g. Postgres on Supabase/Render)
     DATABASE_URL = os.getenv("DATABASE_URL")
     if DATABASE_URL:
-        # SQLAlchemy requires postgresql:// instead of postgres://
+        # Normalize legacy "postgres://" prefix
         if DATABASE_URL.startswith("postgres://"):
             DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        # Force SQLAlchemy to use psycopg v3 driver (psycopg[binary])
+        # This avoids the "No module named 'psycopg2'" error on Python 3.14
+        if DATABASE_URL.startswith("postgresql://") and "+psycopg" not in DATABASE_URL:
+            DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
     else:
         SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
