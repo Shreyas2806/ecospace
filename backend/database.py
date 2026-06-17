@@ -15,7 +15,7 @@ def init_db(app):
     db_name = app.config.get('DB_NAME', 'ecosphere')
     
     db_uri = app.config.get('SQLALCHEMY_DATABASE_URI', '')
-    is_postgres = db_uri.startswith('postgresql://') or db_uri.startswith('postgres://')
+    is_postgres = 'postgres' in db_uri
     
     mysql_works = False
     
