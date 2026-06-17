@@ -22,8 +22,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Configure CORS
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # Configure CORS - allow all origins for API routes (required for Vercel → Render cross-origin calls)
+    CORS(app, 
+         resources={r"/api/*": {"origins": "*"}},
+         supports_credentials=False,
+         allow_headers=["Content-Type", "Authorization"],
+         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+    )
+
     
     # Initialize Database
     init_db(app)
