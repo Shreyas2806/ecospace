@@ -465,8 +465,9 @@ export default function App() {
             <form onSubmit={isRegistering ? handleRegister : handleLogin} className="space-y-4">
               {isRegistering && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
+                  <label htmlFor="auth-name" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Full Name</label>
                   <input 
+                    id="auth-name"
                     type="text" 
                     required 
                     placeholder="Jane Doe"
@@ -478,8 +479,9 @@ export default function App() {
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                <label htmlFor="auth-email" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
                 <input 
+                  id="auth-email"
                   type="email" 
                   required 
                   placeholder="name@example.com"
@@ -490,8 +492,9 @@ export default function App() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Password</label>
+                <label htmlFor="auth-password" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Password</label>
                 <input 
+                  id="auth-password"
                   type="password" 
                   required 
                   placeholder="••••••••"
@@ -503,8 +506,9 @@ export default function App() {
 
               {isRegistering && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Account Role</label>
+                  <label htmlFor="auth-role" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Account Role</label>
                   <select 
+                    id="auth-role"
                     value={authRole} 
                     onChange={e => setAuthRole(e.target.value)} 
                     className="w-full px-4 py-2.5 rounded-lg bg-slate-900/50 border border-slate-700/80 text-slate-100 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
@@ -533,8 +537,9 @@ export default function App() {
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                <label htmlFor="forgot-email" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
                 <input 
+                  id="forgot-email"
                   type="email" 
                   required 
                   placeholder="name@example.com"
@@ -652,14 +657,14 @@ export default function App() {
   return (
     <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200 font-sans">
       {/* Sidebar Navigation */}
-      <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md flex flex-col justify-between p-5 relative z-20 shrink-0">
+      <aside aria-label="Main navigation" className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md flex flex-col justify-between p-5 relative z-20 shrink-0">
         <div>
           <div className="flex items-center gap-2.5 mb-8 px-2">
             <Leaf className="text-emerald-500" size={28} />
             <span className="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">EcoSphere AI</span>
           </div>
 
-          <nav className="space-y-1">
+          <nav role="navigation" aria-label="Site sections" className="space-y-1">
             <button 
               onClick={() => setActiveTab('dashboard')} 
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition ${activeTab === 'dashboard' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'}`}
@@ -738,8 +743,9 @@ export default function App() {
               onClick={() => setDarkMode(!darkMode)} 
               className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
               title="Toggle Dark Mode"
+              aria-label="Toggle Dark Mode"
             >
-              {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+              {darkMode ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
             </button>
             <button 
               onClick={handleAuthFailure} 
@@ -975,8 +981,9 @@ export default function App() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Activity Type</label>
+                      <label htmlFor="log-activity-type" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Activity Type</label>
                       <select 
+                        id="log-activity-type"
                         value={logType} 
                         onChange={e => setLogType(e.target.value)} 
                         className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 transition"
@@ -988,8 +995,9 @@ export default function App() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Value ({getUnitName(logCategory, logType)})</label>
+                      <label htmlFor="log-value" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Value ({getUnitName(logCategory, logType)})</label>
                       <input 
+                        id="log-value"
                         type="number" 
                         step="0.01"
                         required 
@@ -1058,8 +1066,9 @@ export default function App() {
 
                 <form onSubmit={handleMobilityCheck} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Distance (km)</label>
+                    <label htmlFor="mob-distance" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Distance (km)</label>
                     <input 
+                      id="mob-distance"
                       type="number" 
                       required 
                       placeholder="e.g. 20"
@@ -1070,8 +1079,9 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Current Commute Mode</label>
+                    <label htmlFor="mob-mode" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Current Commute Mode</label>
                     <select 
+                      id="mob-mode"
                       value={mobCurrentMode} 
                       onChange={e => setMobCurrentMode(e.target.value)} 
                       className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 transition"
@@ -1370,8 +1380,9 @@ export default function App() {
 
                   <form onSubmit={handleCreateGoal} className="space-y-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Goal Target description</label>
+                      <label htmlFor="goal-title" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Goal Target description</label>
                       <input 
+                        id="goal-title"
                         type="text" 
                         required 
                         placeholder="e.g. Reduce transportation emissions by 20%"
@@ -1383,8 +1394,9 @@ export default function App() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Category</label>
+                        <label htmlFor="goal-category" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Category</label>
                         <select 
+                          id="goal-category"
                           value={newGoalCategory} 
                           onChange={e => setNewGoalCategory(e.target.value)} 
                           className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 transition"
@@ -1398,8 +1410,9 @@ export default function App() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Reduction %</label>
+                        <label htmlFor="goal-reduction" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Reduction %</label>
                         <select 
+                          id="goal-reduction"
                           value={newGoalReduction} 
                           onChange={e => setNewGoalReduction(e.target.value)} 
                           className="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 transition"
@@ -1413,8 +1426,9 @@ export default function App() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Target Date</label>
+                        <label htmlFor="goal-date" className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Target Date</label>
                         <input 
+                          id="goal-date"
                           type="date" 
                           required 
                           value={newGoalDate} 
