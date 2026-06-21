@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { 
-  Leaf, Activity, Car, Zap, Coffee, Trash2, ShieldAlert, Award, 
-  Sparkles, Calendar, Compass, User, LogOut, Sun, Moon, 
-  TrendingUp, Play, Trophy, Users, BarChart3, PlusCircle, 
+/**
+ * @fileoverview EcoSphere AI — Main application component.
+ *
+ * Orchestrates authentication state, tab navigation, and all feature panels.
+ * Network communication is delegated to {@link module:services/api} to keep
+ * UI logic decoupled from HTTP concerns.
+ *
+ * @module App
+ */
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Leaf, Activity, Car, Zap, Coffee, Trash2, ShieldAlert, Award,
+  Sparkles, Calendar, Compass, User, LogOut, Sun, Moon,
+  TrendingUp, Play, Trophy, Users, BarChart3, PlusCircle,
   CheckCircle2, ChevronRight, Bell, HelpCircle, FileText
 } from 'lucide-react';
 
-// Import Chart.js components
+// Chart.js components
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -23,22 +31,46 @@ import {
 } from 'chart.js';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 
+// Internal service layer and constants
+import {
+  loginUser,
+  registerUser,
+  forgotPassword,
+  fetchProfile,
+  fetchDashboard,
+  fetchActivities,
+  logActivity,
+  fetchMobilityAlternatives,
+  fetchCoachTips,
+  runSimulation,
+  fetchPredictions,
+  fetchGoals,
+  createGoal as apiCreateGoal,
+  fetchBadges,
+  fetchLeaderboard,
+  fetchNotifications,
+  markNotificationsRead,
+  fetchAdminAnalytics,
+  fetchAllUsers,
+  deleteUser as apiDeleteUser,
+  generateReport,
+} from './services/api';
+import {
+  CATEGORY_TYPES,
+  ACTIVITY_UNITS,
+  COMMUTE_MODES,
+  GOAL_REDUCTION_OPTIONS,
+  GOAL_REDUCTION_DEFAULT,
+  ROLES,
+} from './constants';
+
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
+  CategoryScale, LinearScale, PointElement, LineElement,
+  BarElement, ArcElement, Title, Tooltip, Legend, Filler
 );
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
-
+/** @returns {JSX.Element} The root application element. */
 export default function App() {
   // Authentication states
   const [token, setToken] = useState(localStorage.getItem('token') || '');
