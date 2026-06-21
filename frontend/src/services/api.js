@@ -14,7 +14,7 @@ import axios from 'axios';
 
 /** Shared Axios instance pre-configured with the API base URL. */
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
