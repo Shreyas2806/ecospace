@@ -66,15 +66,10 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # CORS — explicitly allow the Vercel frontend + wildcard fallback
+    # CORS — allow all origins for /api/* (required for Vercel → Render cross-origin)
     CORS(
         app,
-        resources={r"/api/*": {"origins": [
-            "https://ecosphere-six.vercel.app",
-            "https://*.vercel.app",
-            "http://localhost:5173",
-            "http://localhost:3000",
-        ]}},
+        resources={r"/api/*": {"origins": "*"}},
         supports_credentials=False,
         allow_headers=["Content-Type", "Authorization"],
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
