@@ -12,9 +12,19 @@ import axios from 'axios';
 
 // ── Axios instance ────────────────────────────────────────────────────────────
 
-/** Shared Axios instance pre-configured with the API base URL. */
+/** Shared Axios instance pre-configured with the API base URL.
+ *
+ * Normalisation: Regardless of whether VITE_API_URL is set to
+ *   "https://backend.onrender.com"  or
+ *   "https://backend.onrender.com/api"
+ * the baseURL will always resolve to the /api-suffixed form so that service
+ * paths like "/auth/register" correctly reach "/api/auth/register".
+ */
+const _rawBase = import.meta.env.VITE_API_URL || 'https://ecosphere-backend-inlv.onrender.com';
+const _apiBase = _rawBase.replace(/\/api\/?$/, '').replace(/\/$/, '') + '/api';
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: _apiBase,
   headers: { 'Content-Type': 'application/json' },
 });
 
