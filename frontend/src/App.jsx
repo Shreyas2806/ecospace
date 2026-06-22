@@ -279,7 +279,7 @@ export default function App() {
       setAuthMessage('Account registered successfully! You can now log in.');
       setIsRegistering(false);
     } catch (err) {
-      setAuthError(err.response?.data?.message || 'Registration failed.');
+      setAuthError(err.response?.data?.message || `Registration failed: ${err.message}`);
     }
   };
 
