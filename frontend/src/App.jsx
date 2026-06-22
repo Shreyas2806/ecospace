@@ -36,9 +36,9 @@ import {
   loginUser,
   registerUser,
   forgotPassword,
-  fetchProfile,
-  fetchDashboard,
-  fetchActivities,
+  fetchProfile as fetchProfile_api,
+  fetchDashboard as fetchDashboard_api,
+  fetchActivities as fetchActivities_api,
   logActivity,
   fetchMobilityAlternatives,
   fetchCoachTips,
@@ -47,8 +47,8 @@ import {
   fetchGoals,
   createGoal as apiCreateGoal,
   fetchBadges,
-  fetchLeaderboard,
-  fetchNotifications,
+  fetchLeaderboard as fetchLeaderboard_api,
+  fetchNotifications as fetchNotifications_api,
   markNotificationsRead,
   fetchAdminAnalytics,
   fetchAllUsers,
@@ -166,7 +166,7 @@ export default function App() {
 
   const fetchProfile = async () => {
     try {
-      const res = await api.get('/auth/profile');
+      const res = await fetchProfile_api();
       setUser(res.data);
       if (res.data.role === 'admin') {
         fetchAdminData();
@@ -178,7 +178,7 @@ export default function App() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await api.get('/dashboard');
+      const res = await fetchDashboard_api();
       setDashData(res.data);
     } catch (err) {
       console.error(err);
@@ -187,7 +187,7 @@ export default function App() {
 
   const fetchActivities = async () => {
     try {
-      const res = await api.get('/activities');
+      const res = await fetchActivities_api();
       setRecentActivities(res.data);
     } catch (err) {
       console.error(err);
@@ -196,9 +196,9 @@ export default function App() {
 
   const fetchGoalsAndBadges = async () => {
     try {
-      const resG = await api.get('/gamification/goals');
+      const resG = await fetchGoals();
       setGoals(resG.data);
-      const resB = await api.get('/gamification/badges');
+      const resB = await fetchBadges();
       setBadges(resB.data);
     } catch (err) {
       console.error(err);
@@ -207,7 +207,7 @@ export default function App() {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await api.get('/gamification/leaderboard');
+      const res = await fetchLeaderboard_api();
       setLeaderboard(res.data);
     } catch (err) {
       console.error(err);
@@ -216,7 +216,7 @@ export default function App() {
 
   const fetchNotifications = async () => {
     try {
-      const res = await api.get('/gamification/notifications');
+      const res = await fetchNotifications_api();
       setNotifications(res.data);
       setHasUnreadNotif(res.data.some(n => !n.is_read));
     } catch (err) {
@@ -226,7 +226,7 @@ export default function App() {
 
   const readAllNotifications = async () => {
     try {
-      await api.post('/gamification/notifications/read');
+      await markNotificationsRead();
       setHasUnreadNotif(false);
       fetchNotifications();
     } catch (err) {
@@ -236,9 +236,9 @@ export default function App() {
 
   const fetchAdminData = async () => {
     try {
-      const resA = await api.get('/admin/analytics');
+      const resA = await fetchAdminAnalytics();
       setAdminAnalytics(resA.data);
-      const resU = await api.get('/admin/users');
+      const resU = await fetchAllUsers();
       setAdminUsers(resU.data);
     } catch (err) {
       console.error(err);
@@ -257,7 +257,7 @@ export default function App() {
     setAuthError('');
     setAuthMessage('');
     try {
-      const res = await api.post('/auth/login', { email: authEmail, password: authPassword });
+      const res = await loginUser({ email: authEmail, password: authPassword });
       setToken(res.data.token);
       setUser(res.data.user);
     } catch (err) {
@@ -270,7 +270,7 @@ export default function App() {
     setAuthError('');
     setAuthMessage('');
     try {
-      await api.post('/auth/register', { 
+      await registerUser({ 
         name: authName, 
         email: authEmail, 
         password: authPassword, 
@@ -288,7 +288,7 @@ export default function App() {
     setAuthError('');
     setAuthMessage('');
     try {
-      const res = await api.post('/auth/forgot-password', { email: authEmail });
+      const res = await forgotPassword(authEmail);
       setAuthMessage(res.data.message);
     } catch (err) {
       setAuthError(err.response?.data?.message || 'Failed to request reset link.');
@@ -300,7 +300,7 @@ export default function App() {
     e.preventDefault();
     setLogStatus('');
     try {
-      const res = await api.post('/activities', {
+      const res = await logActivity({
         category: logCategory,
         activity_type: logType,
         value: logValue
@@ -321,7 +321,7 @@ export default function App() {
   const handleMobilityCheck = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/mobility/recommend', {
+      const res = await fetchMobilityAlternatives({
         distance: mobDistance,
         current_mode: mobCurrentMode
       });
@@ -335,7 +335,7 @@ export default function App() {
   const triggerCoach = async () => {
     setLoadingCoach(true);
     try {
-      const res = await api.get('/coach/tips');
+      const res = await fetchCoachTips();
       setCoachTips(res.data.coach_recommendations);
     } catch (err) {
       setCoachTips('Failed to get coach recommendations.');
@@ -347,7 +347,7 @@ export default function App() {
   // Simulator handler
   const triggerSimulation = async () => {
     try {
-      const res = await api.post('/simulator/simulate', {
+      const res = await runSimulation({
         transport_distance: simDistance,
         transport_mode: simMode,
         electricity_kwh: simElectricity,
@@ -372,7 +372,7 @@ export default function App() {
   const triggerPredictions = async () => {
     setLoadingMl(true);
     try {
-      const res = await api.get('/predictions');
+      const res = await fetchPredictions();
       setMlData(res.data);
     } catch (err) {
       console.error(err);
@@ -392,7 +392,7 @@ export default function App() {
     e.preventDefault();
     setGoalStatusMsg('');
     try {
-      await api.post('/gamification/goals', {
+      await apiCreateGoal({
         title: newGoalTitle,
         category: newGoalCategory,
         target_reduction_pct: newGoalReduction,
@@ -410,7 +410,7 @@ export default function App() {
 
   const handleCompleteGoal = async (goalId) => {
     try {
-      await api.patch(`/gamification/goals/${goalId}/complete`);
+      await completeGoal(goalId);
       fetchGoalsAndBadges();
       fetchDashboard();
       fetchNotifications();
@@ -425,7 +425,7 @@ export default function App() {
   const handleDeleteUser = async (userId) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
     try {
-      await api.delete(`/admin/users/${userId}`);
+      await apiDeleteUser(userId);
       fetchAdminData();
     } catch (err) {
       alert(err.response?.data?.message || 'Delete user failed.');
@@ -434,7 +434,7 @@ export default function App() {
 
   const handleGenerateReport = async () => {
     try {
-      const res = await api.get('/admin/report');
+      const res = await generateReport();
       setAdminReport(res.data);
     } catch (err) {
       console.error(err);
