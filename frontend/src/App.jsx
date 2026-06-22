@@ -138,12 +138,6 @@ export default function App() {
   const [adminUsers, setAdminUsers] = useState([]);
   const [adminReport, setAdminReport] = useState(null);
 
-  // Axios configuration
-  const api = axios.create({
-    baseURL: API_BASE,
-    headers: token ? { Authorization: `Bearer ${token}` } : {}
-  });
-
   // Handle dark mode class toggling
   useEffect(() => {
     const root = window.document.documentElement;
